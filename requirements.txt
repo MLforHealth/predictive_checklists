@@ -1,0 +1,11 @@
+numpy==1.19.0
+pandas==1.1.5
+scikit-learn==0.24.1
+scipy==1.4.1
+matplotlib==2.2.2
+tqdm==4.49.0
+imbalanced-learn==0.8.0
+xgboost==0.90
+optbinning==0.8.0
+mip==1.13.0
+openpyxl==3.0.9
