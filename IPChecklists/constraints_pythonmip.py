@@ -280,3 +280,36 @@ class PredPrevalenceConstraint(Constraint):
 
     def __str__(self):
         return f"Predicted Prevalence <= {self.val}"
+
+class ItemSelectionConstraint(Constraint):
+    '''Constraints the checklist to use {<=, ==, >=} K items from a provided list of binary feature names.'''
+    def __init__(self, feat_names, op, K):
+        '''
+            feat_names: list of binary features in binary dataset
+            op: operator (str), <=, >= or ==
+            K: number of items (int)
+        '''
+        super().__init__()
+        self.feat_names = feat_names
+        self.op = op
+        self.K = K
+        
+    def add(self, m_vars, dataset, binarized_df):
+        inds = []
+        for c, i in enumerate(binarized_df.columns):
+            if i in self.feat_names:
+                inds.append(c)
+        if self.op == '<=':
+            m_vars['model'] += xsum(m_vars['lamb'][i] for i in inds) <= self.K
+        elif self.op == '>=':
+            m_vars['model'] += xsum(m_vars['lamb'][i] for i in inds) >= self.K
+        elif self.op == '==':
+            m_vars['model'] += xsum(m_vars['lamb'][i] for i in inds) == self.K              
+        else:
+            raise NotImplementedError
+            
+        for i in inds[:self.K]:
+            m_vars['model'].start.append((m_vars['lamb'][i], 1.0))
+                        
+    def __str__(self):
+        return f"Use {self.op} {self.K} items from {self.feat_names}"

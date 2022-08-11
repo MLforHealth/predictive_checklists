@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='predictive_checklists',
-      version='0.2',
+      version='0.3',
       description='Creating Predictive Checklists Using Integer Programming',
       url='https://github.com/MLforHealth/predictive_checklists',
       author='Haoran Zhang',

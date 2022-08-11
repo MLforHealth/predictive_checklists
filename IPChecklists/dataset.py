@@ -260,6 +260,14 @@ class BinaryDataset():
 
         return df, feature_mapping
 
+    def drop_binary_features(self, feat_list):
+        '''Drops a list of binary features in-place from the binarized dataframe. Should be used before creating the model.'''
+        for i in feat_list:
+            assert i in self.binarized_df, f'%"{i}" not in binary feature name'
+            self.remaining_features.remove(i)
+        
+        self.binarized_df = self.binarized_df.drop(columns = feat_list)
+
     def subset_by_protected_group(self, attribute_name, grp_name):
         mask = self.protected_groups[attribute_name] == grp_name
         return self.binarized_df[mask], self.target[mask]    
