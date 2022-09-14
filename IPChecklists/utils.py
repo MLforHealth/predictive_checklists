@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from pandas.api.types import is_string_dtype
 import random
-from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score, average_precision_score
+from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score, average_precision_score, balanced_accuracy_score
 from cplex.callbacks import IncumbentCallback, HeuristicCallback, MIPInfoCallback
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.model_selection import StratifiedKFold
@@ -80,10 +80,10 @@ def binary_metrics(targets, preds, return_arrays = False):
 
     res['n_samples'] = len(targets)
 
-    res['TN'] = np.asscalar(CM[0][0])
-    res['FN'] = np.asscalar(CM[1][0])
-    res['TP'] = np.asscalar(CM[1][1])
-    res['FP'] = np.asscalar(CM[0][1])
+    res['TN'] = CM[0][0].item()
+    res['FN'] = CM[1][0].item()
+    res['TP'] = CM[1][1].item()
+    res['FP'] = CM[0][1].item()
 
     res['error'] = res['FN'] + res['FP']
 
@@ -107,6 +107,7 @@ def binary_metrics(targets, preds, return_arrays = False):
     res['precision'] = res['TP'] / (res['TP'] + res['FP']) if (res['TP'] + res['FP']) > 0 else 0
     res['pred_prevalence'] = (res['TP'] + res['FP'])/res['n_samples']    
     res['prevalence'] = (res['TP'] + res['FN'])/res['n_samples']  
+    res['balanced_acc'] = balanced_accuracy_score(targets, preds)
     
     return res
 

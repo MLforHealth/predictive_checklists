@@ -98,8 +98,12 @@ class ChecklistMIP(object):
         elif cost_func == 'FNR': # 
             self.lplus_weight = self.prod.n_samples_plus + 0.5
             self.lminus_weight = 1.0 
+        
+        elif cost_func == 'balanced_01':
+            self.lplus_weight = 1.0 # 1.0/self.prod.n_samples_plus
+            self.lminus_weight = self.prod.n_samples_plus/self.prod.n_samples_minus # 1.0/self.prod.n_samples_minus
         else:
-            raise NotImplementedError
+            raise NotImplementedError(cost_func)
 
         self.lplus_weight = lplus_weight if lplus_weight is not None else self.lplus_weight      
         self.lminus_weight = lminus_weight if lminus_weight is not None else self.lminus_weight
